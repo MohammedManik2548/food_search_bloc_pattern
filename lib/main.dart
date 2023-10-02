@@ -6,6 +6,7 @@ import 'bloc/search/search_bloc.dart';
 import 'data/repositories/food_repository.dart';
 import 'data/repositories/search_repository.dart';
 
+
 void main() {
   runApp(const MyApp());
 }
@@ -28,8 +29,11 @@ class MyApp extends StatelessWidget {
                 foodRepository: FoodRepositoryImpl(),
               )),
         ],
-        child: const MaterialApp(
+        child: MaterialApp(
           debugShowCheckedModeBanner: false,
+          builder: (context, child) {
+            return Directionality(textDirection: TextDirection.ltr, child: child!);
+          },
           title: 'Foodie App',
           home: HomePage(),
         ));

@@ -9,7 +9,7 @@ abstract class SearchRepository{
 class SearchRepositoryImpl extends SearchRepository{
   @override
   Future<List<Recipe>> searchFoods(String query)async {
-    Dio dio = Dio();
+    final dio = Dio();
     String url = 'https://forkify-api.herokuapp.com/api/search?q=$query';
     var response = await dio.get(url);
     if(response.statusCode == 200){

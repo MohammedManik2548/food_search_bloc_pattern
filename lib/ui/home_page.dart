@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:google_nav_bar/google_nav_bar.dart';
 import '../bloc/food_bloc.dart';
 import '../bloc/food_event.dart';
 import '../bloc/food_state.dart';
@@ -22,6 +22,7 @@ class HomePage extends StatelessWidget {
         create: (context) => FoodBloc(foodRepository: FoodRepositoryImpl())..add(FetchFoodEvent()),
         child: Scaffold(
           appBar: AppBar(
+            backgroundColor: Colors.purple,
             centerTitle: true,
             title: const Text("Food Search App"),
             actions: [
@@ -48,6 +49,59 @@ class HomePage extends StatelessWidget {
               }
               return Container();
             },),
+          ),
+          bottomNavigationBar: Container(
+            height: 50,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  blurRadius: 20,
+                  color: Colors.black.withOpacity(.1),
+                )
+              ],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(left: 5.0,right: 5.0),
+              child: GNav(
+                  rippleColor: Colors.grey[800]!, // tab button ripple color when pressed
+                  hoverColor: Colors.grey[700]!, // tab button hover color
+                  haptic: true, // haptic feedback
+                  tabBorderRadius: 15,
+                  //tabActiveBorder: Border.all(color: Colors.black, width: 1), // tab button border
+                  //tabBorder: Border.all(color: Colors.grey, width: 1), // tab button border
+                  //tabShadow: [BoxShadow(color: Colors.grey.withOpacity(0.5), blurRadius: 8)], // tab button shadow
+                  curve: Curves.easeOutExpo, // tab animation curves
+                  duration: const Duration(milliseconds: 900), // tab animation duration
+                  gap: 8, // the tab button gap between icon and text
+                  color: Colors.grey[800], // unselected icon color
+                  activeColor: Colors.purple, // selected icon and text color
+                  iconSize: 24, // tab button icon size
+                  tabBackgroundColor: Colors.purple.withOpacity(0.5), // selected tab background color
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5), // navigation bar padding
+                  onTabChange: (index){
+                    debugPrint(index.toString());
+                  },
+                  tabs: const [
+                    GButton(
+                      icon: Icons.home,
+                      text: 'Home',
+                    ),
+                    GButton(
+                      icon: Icons.favorite_border,
+                      text: 'Likes',
+                    ),
+                    GButton(
+                      icon: Icons.search,
+                      text: 'Search',
+                    ),
+                    GButton(
+                      icon: Icons.person_outline_outlined,
+                      text: 'Profile',
+                    ),
+                  ]
+              ),
+            ),
           ),
         ));
   }

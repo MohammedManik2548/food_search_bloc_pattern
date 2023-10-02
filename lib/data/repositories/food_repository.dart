@@ -9,7 +9,7 @@ abstract class FoodRepository{
 class FoodRepositoryImpl extends FoodRepository{
   @override
   Future<List<Recipe>> getFoods() async {
-    Dio dio = Dio();
+    final dio = Dio();
     String url = 'https://forkify-api.herokuapp.com/api/search?q=pizza#';
 
     var response = await dio.get(url);
