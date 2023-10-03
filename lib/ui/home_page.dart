@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_search_bloc_pattern/bloc/botton_nav_bar/nav_bar_bloc.dart';
+import 'package:food_search_bloc_pattern/bloc/botton_nav_bar/nav_bar_event.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import '../bloc/botton_nav_bar/nav_bar_state.dart';
 import '../bloc/food_bloc.dart';
 import '../bloc/food_event.dart';
 import '../bloc/food_state.dart';
@@ -36,19 +39,10 @@ class HomePage extends StatelessWidget {
                   }),
             ],
           ),
-          body: SingleChildScrollView(
-            child: BlocBuilder<FoodBloc, FoodState>(builder: (context, state) {
-              if(state is FoodInitialState){
-                return buildLoading();
-              }else if(state is FoodLoadingState){
-                return buildLoading();
-              }else if(state is FoodLoadedState){
-                return buildHintsList(state.recipes);
-              }else if(state is FoodErrorState){
-                return buildError(state.message);
-              }
-              return Container();
-            },),
+          body: BlocBuilder<NavigationBloc, NavigationState>(
+            builder: (context, state){
+              return _buildPage(state.tabIndex);
+            },
           ),
           bottomNavigationBar: Container(
             height: 50,
@@ -80,7 +74,8 @@ class HomePage extends StatelessWidget {
                   tabBackgroundColor: Colors.purple.withOpacity(0.5), // selected tab background color
                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5), // navigation bar padding
                   onTabChange: (index){
-                    debugPrint(index.toString());
+                    BlocProvider.of<NavigationBloc>(context).add(NavTabChange(tabIndex: index));
+                    // debugPrint(index.toString());
                   },
                   tabs: const [
                     GButton(
@@ -104,6 +99,56 @@ class HomePage extends StatelessWidget {
             ),
           ),
         ));
+  }
+}
+
+Widget _buildPage(int currentIndex) {
+  switch (currentIndex) {
+    case 0:
+      return MainScreen();
+    case 1:
+      return SearchScreen();
+    case 2:
+      return ProfileScreen();
+    default:
+      return Container(); // Handle invalid index
+  }
+}
+class MainScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => FoodBloc(foodRepository: FoodRepositoryImpl())..add(FetchFoodEvent()),
+      child: Scaffold(
+        body: SingleChildScrollView(
+          child: BlocBuilder<FoodBloc, FoodState>(builder: (context, state) {
+            if(state is FoodInitialState){
+              return buildLoading();
+            }else if(state is FoodLoadingState){
+              return buildLoading();
+            }else if(state is FoodLoadedState){
+              return buildHintsList(state.recipes);
+            }else if(state is FoodErrorState){
+              return buildError(state.message);
+            }
+            return Container();
+          },),
+        ),
+      ),
+    );
+  }
+}
+class SearchScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(child: Text('Search Screen'));
+  }
+}
+
+class ProfileScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(child: Text('Profile Screen'));
   }
 }
 
